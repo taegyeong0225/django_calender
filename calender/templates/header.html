@@ -1,0 +1,39 @@
+<!-- -->
+<nav class="navbar navbar-expand-lg bg-body-tertiary py-3" style="background-color: #C1DAFF; width: 100%;">
+  <a class="navbar-brand mx-auto" style="font-size: 25px;" href="/">Python Django - Food Management</a>
+  <!-- Button trigger modal -->
+  <ul class="navbar-nav ml-auto">
+    <li class="nav-item" style="list-style-type: none;">
+      <a class = "nav link" href="#" data-toggle="modal" data-target="#loginModal">Log In</a>
+    </li>
+  </ul>
+
+</nav>
+
+
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title fs-5" id="loginModalLabel"><i class="fa-solid fa-right-to-bracket"></i>&nbsp; Log In</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- 로그인 내용 작성 -->
+        <div class="row">
+          <div class="col-md-6">
+            <a role="button" class="btn btn-outline-dark btn-block btn-sm" href="/"><i class="fa-brands fa-google"></i>&nbsp; Log in with google</a>
+            <a href="/account/login/" role="button" class="btn btn-outline-dark btn-block btn-sm"><i class="fa-solid fa-envelope"></i>&nbsp; Log in with Username </a>
+          </div>
+          <div class="col-md-6">
+            <a href="/account/signup/" role="button" class="btn btn-outline-dark btn-block btn-sm"><i class="fa-solid fa-user-plus"></i>&nbsp; Sign Up with E-mail</a>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
