@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,12 +20,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k5w8k5$k$1(imw7=qi)$o9de5i#oq2c*s7(t)548zl-o9xir0i'
+# SECRET_KEY = 'django-insecure-k5w8k5$k$1(imw7=qi)$o9de5i#oq2c*s7(t)548zl-o9xir0i'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-k5w8k5$k$1(imw7=qi)$o9de5i#oq2c*s7(t)548zl-o9xir0i')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = int(os.environ.get('DEBUG', 1))
 
-ALLOWED_HOSTS = []
+
+if os.environ.get('DJANGO_ALLOWED_HOSTS'):
+    ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS').split(' ')
+else:
+    ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -76,8 +82,12 @@ WSGI_APPLICATION = 'django_calender_prj.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME':'calender',
+        'USER': 'root',
+        'PASSWORD': '0000',
+        'HOST':'localhost',
+        'PORT': '3306',
     }
 }
 
