@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> 냉장고 자료관리 웹사이트 </title>
+    <title>냉장고 자료관리 웹사이트</title>
 
     <!-- 부트스트랩 경로-->
     <link href="./bootstrap4/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
     <!-- jquery -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <!-- 입력 모달을 위한 제이쿼리 -->
+        <!-- jQuery UI 스타일시트 -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <!-- jQuery UI 스크립트 -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js"></script>
@@ -21,34 +28,95 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.js"></script>
 
-
     <!-- icon -->
     <script src="https://kit.fontawesome.com/e902df2198.js" crossorigin="anonymous"></script>
 </head>
 <body>
-{% include "./header.html"%}
+{% include "./header.html" %}
+    <div class="spacer" style="margin-bottom: 2em"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 order-first">
+                <div class='sideBar'
+                     style="padding: 30px; padding-bottom: 10em; padding-top: 50px; background-color: transparent;">
+                    <!-- 사이드바 메뉴목록 1 -->
+                    <div class="container-fluid">
 
+                        <!-- 사이드바 메뉴목록 2 -->
+                        <div class="panel panel-info mb-5">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Categories</h3>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="#">재료</a></li>
+                                <li class="list-group-item"><a href="#">비재료</a></li>
+                            </ul>
+                        </div>
 
-<div class="spacer" style="margin-bottom: 2em"></div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-md-3 order-first">
-            <div class='sideBar' style="padding: 30px; padding-bottom: 10em; padding-top: 50px; background-color: transparent;">
-                 {% include "./side_bar.html" %}
+                        <!-- 사이드바 메뉴목록 3 -->
+                        <div class="panel panel-info ">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Community</h3>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item"><a href="#">교환 및 나눔</a></li>
+                                <li class="list-group-item"><a href="#">나만의 레시피</a></li>
+                                <li class="list-group-item"><a href="#">미분류</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div id='calendar' style="margin-top: 1px;"></div>
             </div>
         </div>
-        <div class="col-md-9">
-            <div id='calendar' style="margin-top: 1px;"></div>
-        </div>
     </div>
-</div>
 
+    <!-- 추가된 부분: 모달 창
+    <div id="event-dialog" title="이벤트 정보 입력">
+        <label for="event-food">음식 이름:</label>
+        <input type="text" id="event-food" name="event-food">
+        <label for="event-start">시작 날짜:</label>
+        <input type="text" id="event-start" name="event-start" disabled>
+        <label for="event-end">종료 날짜:</label>
+        <input type="text" id="event-end" name="event-end">
+        <button id="save-event">저장</button>
+        <button id="cancel-event">취소</button>
+    </div> -->
+    <!-- 모달 창 스타일
+    <style>
+        /* 모달 대화 상자 스타일 */
+        #event-dialog {
+            display: none;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            text-align: left;
+        }
 
-
+        /* 모달 버튼 스타일 */
+        #event-dialog button {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin-top: 10px;
+            padding: 10px 20px;
+        }
+    </style> -->
 
 {% include "./script.html" %}
-{% include "./footer.html" %}
+    <!-- Footer-->
+    <footer class="py-3" style="background-color: #C1DAFF; position: fixed; bottom: 0; width: 100%;">
+        <div class="container"><p class="m-0 text-center text-black">Copyright &copy; Taegyeong's S/W project 2023</p></div>
+    </footer>
 </body>
 </html>
+
 

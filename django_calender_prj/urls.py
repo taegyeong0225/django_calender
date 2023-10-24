@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from calender import views
 
 urlpatterns = [
@@ -25,4 +25,5 @@ urlpatterns = [
     path('add_event/', views.add_event, name='add_event'),
     path('update/', views.update, name='update'),
     path('remove/', views.remove, name='remove'),
+    path('accounts/', include('allauth.urls')), # 로그인 사이트 주소
 ]

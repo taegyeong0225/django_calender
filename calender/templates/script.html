@@ -23,6 +23,54 @@
             editable: true,
             eventLimit: true,
 
+            /* 날짜를 선택할 때
+            select: function (start, end, allDay) {
+                var foodName = "";
+                var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+
+                // 모달 대화 상자 열기
+                $("#event-food").val("");
+                $("#event-start").val(startDate);
+                $("#event-end").val(endDate);
+
+                $("#event-dialog").dialog({
+                    title: '이벤트 정보 입력',
+                    buttons: {
+                        '저장': function () {
+                            foodName = $("#event-food").val();
+                            startDate = $("#event-start").val();
+                            endDate = $("#event-end").val();
+
+                            // 서버로 이벤트 데이터 전송
+                            $.ajax({
+                                type: "GET",
+                                url: '/add_event',
+                                data: {'title': foodName, 'start': startDate, 'end': endDate},
+                                dataType: "json",
+                                success: function (data) {
+                                    calendar.fullCalendar('refetchEvents');
+                                    alert("Added Successfully");
+                                    $("#event-dialog").dialog('close');
+                                },
+                                error: function (data) {
+                                    alert('There is a problem!!!');
+                                }
+                            });
+                        },
+                        '취소': function () {
+                            $("#event-dialog").dialog('close');
+                        }
+                    },
+                    close: function () {
+                        // 다이얼로그가 닫힐 때 입력 값 초기화
+                        $("#event-food").val("");
+                        $("#event-start").val("");
+                        $("#event-end").val("");
+                    },
+                    modal: true
+                });
+            }, */
             // 날짜를 선택할 때
             select: function (start, end, allDay) {
                 var title = prompt("음식 정보를 입력하세요!");
