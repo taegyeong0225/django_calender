@@ -34,7 +34,6 @@ else:
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '127.0.0.1:8000']
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,18 +44,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'calender',
+
     # django_allauth 설치
     'django.contrib.sites',
     'allauth',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    # 회원가입
+    'accounts',
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -122,11 +128,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Seoul'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -144,15 +150,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #     'allauth.account.auth_backends.AuthenticationBackend',
 # )
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-
-SITE_ID = 1
-
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-# 로그인
-LOGIN_REDIRECT_URL = '/'
+# AUTHENTICATION_BACKENDS = (
+#     'django.contrib.auth.backends.ModelBackend',  # <- 디폴트 모델 백엔드
+#     'allauth.account.auth_backends.AuthenticationBackend', # <- 추가
+# )
+#
+#
+# SITE_ID = 1
+#
+# ACCOUNT_EMAIL_REQUIRED = True
+# ACCOUNT_EMAIL_VERIFICATION = 'none'
+# # 로그인
+# LOGIN_REDIRECT_URL = '/'

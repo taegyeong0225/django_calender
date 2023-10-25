@@ -15,15 +15,29 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from calender import views
+from django.urls import path
+from calender import views as calender_views
+from accounts import views as accounts_views
+# from .views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index, name='index'),
-    path('all_events/', views.all_events, name='all_events'),
-    path('add_event/', views.add_event, name='add_event'),
-    path('update/', views.update, name='update'),
-    path('remove/', views.remove, name='remove'),
-    path('accounts/', include('allauth.urls')), # 로그인 사이트 주소
+    path('', calender_views.index, name='index'),
+    path('all_events/', calender_views.all_events, name='all_events'),
+    path('add_event/', calender_views.add_event, name='add_event'),
+    path('update/', calender_views.update, name='update'),
+    path('remove/', calender_views.remove, name='remove'),
+
+    path('', accounts_views.home, name='home'),
+    path('accounts/signup/', accounts_views.signup, name='signup'),
+    path('accounts/login/', accounts_views.login, name='login'),
+    path('accounts/logout/', accounts_views.logout, name='logout'),
+    # path('signup/', signup, name='signup'),
+    # path('accounts/', include('allauth.urls')), # 로그인 사이트 주소
 ]
+
+
+
+# urlpatterns = [
+#     path('signup/', signup, name='signup'),
+# ]
