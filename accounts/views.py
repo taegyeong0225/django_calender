@@ -7,17 +7,27 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 
+
 def signup(request):
+    duplicate_username = False
+
     if request.method == 'POST':
         if request.POST['password1'] == request.POST['password2']:
-            user = User.objects.create_user(
-                                            username=request.POST['username'],
-                                            password=request.POST['password1'],
-                                            email=request.POST['email'],)
-            auth.login(request, user)
-            return redirect('/')
-        return render(request, 'signup.html')
-    return render(request, 'signup.html')
+            username = request.POST['username']
+
+            # 중복 아이디 확인
+            if User.objects.filter(username=username).exists():
+                duplicate_username = True
+            else:
+                user = User.objects.create_user(
+                    username=username,
+                    password=request.POST['password1'],
+                    email=request.POST['email'],
+                )
+                auth.login(request, user)
+                return redirect('/')
+
+    return render(request, 'signup.html', {'duplicate_username': duplicate_username})
 
 def login(request):
     if request.method == 'POST':
@@ -38,6 +48,8 @@ def logout(request):
 
 def home(request):
     return render(request, 'landing.html')
+
+
 # def signup(request):
 #     if request.method == 'POST':
 #         if request.POST['password1'] == request.POST['password2']:
