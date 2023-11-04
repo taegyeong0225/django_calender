@@ -4,68 +4,73 @@
     $(document).ready(function () {
         // FullCalendar 인스턴스 생성
         var calendar = $('#calendar').fullCalendar({
-            // 헤더 설정
+            /* header 부분
+                왼쪽 : 이전달, 다음달, today 버튼
+                중앙 : 타이틀 (달 이름)
+                오른쪽 : 보이는 형식 ()
+            */
             header: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,listWeek',
             },
 
-            // 이벤트 데이터 가져오는 URL
+            // 이벤트 데이터를 가져올 URL 설정
             events: '/all_events',
-            // 여러 설정들
             selectable: true,
             selectHelper: true,
             editable: true,
             eventLimit: true,
 
-            // 날짜 선택 시 이벤트
-            select: function (start, end, allDay) {
-                var foodName = "";
-                var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+     // 날짜를 선택할 때
+    select: function (start, end, allDay) {
+        var foodName = "";
+        var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+        var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
 
-                // 입력 필드 초기화
-                $("#event-food").val("");
-                $("#event-start").val(startDate);
-                $("#event-end").val(endDate);
+        // 모달 대화 상자 열기
+        $("#event-food").val("");
+        $("#event-start").val(startDate);
+        $("#event-end").val(endDate);
 
-                // 이벤트 추가 모달 창 열기
-                $("#event-dialog").dialog({
-                    title: '이벤트 정보 입력',
-                    buttons: {
-                        '저장': function () {
-                            foodName = $("#event-food").val();
-                            endDate = $("#event-end").val();
+        $("#event-dialog").dialog({
+            title: '이벤트 정보 입력',
+            buttons: {
+                '저장': function () {
+                    foodName = $("#event-food").val();
+                    endDate = $("#event-end").val();
+                    var category = $("#category").val(); // 선택한 카테고리 값 가져오기
 
-                            // 서버로 이벤트 데이터 전송 (카테고리 데이터 제외)
-                            $.ajax({
-                                type: "GET",
-                                url: '/add_event',
-                                data: {'title': foodName, 'end': endDate},
-                                dataType: "json",
-                                success: function (data) {
-                                    calendar.fullCalendar('refetchEvents');
-                                    alert("성공적으로 추가되었습니다");
-                                    $("#event-dialog").dialog('close');
-                                },
-                                error: function (data) {
-                                    alert('문제가 발생했습니다!!!');
-                                }
-                            });
-                        },
-                        '취소': function () {
+                    // 서버로 이벤트 데이터 전송
+                    $.ajax({
+                        type: "GET",
+                        url: '/add_event',
+                        data: {'title': foodName, 'end': endDate, 'category': category}, // 카테고리 정보 추가
+                        dataType: "json",
+                        success: function (data) {
+                            calendar.fullCalendar('refetchEvents');
+                            alert("Added Successfully");
                             $("#event-dialog").dialog('close');
+                        },
+                        error: function (data) {
+                            alert('There is a problem!!!');
                         }
-                    },
-                    close: function () {
-                        // 모달 닫힐 때 입력 필드 초기화
-                        $("#event-food").val("");
-                        $("#event-end").val("");
-                    },
-                    modal: true
-                });
+                    });
+                },
+                '취소': function () {
+                    $("#event-dialog").dialog('close');
+                }
             },
+            close: function () {
+                // 다이얼로그가 닫힐 때 입력 값 초기화
+                $("#event-food").val("");
+                $("#event-end").val("");
+            },
+            modal: true
+        });
+    },
+
+
 
             // 이벤트 크기 조정 시
             eventResize: function (event) {
@@ -73,8 +78,7 @@
                 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
                 var title = event.title;
                 var id = event.id;
-
-                // 서버로 이벤트 업데이트 데이터 전송
+                // 서버로 이벤트 데이터 전송
                 $.ajax({
                     type: "GET",
                     url: '/update',
@@ -82,22 +86,21 @@
                     dataType: "json",
                     success: function (data) {
                         calendar.fullCalendar('refetchEvents');
-                        alert('이벤트가 업데이트되었습니다');
+                        alert('Event Update');
                     },
                     error: function (data) {
-                        alert('문제가 발생했습니다!!!');
+                        alert('There is a problem!!!');
                     }
                 });
             },
 
-            // 이벤트 드래그 앤 드롭 시
+            // 이벤트 드래그 시
             eventDrop: function (event) {
                 var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
                 var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
                 var title = event.title;
                 var id = event.id;
-
-                // 서버로 이벤트 업데이트 데이터 전송
+                // 서버로 이벤트 데이터 전송
                 $.ajax({
                     type: "GET",
                     url: '/update',
@@ -105,19 +108,18 @@
                     dataType: "json",
                     success: function (data) {
                         calendar.fullCalendar('refetchEvents');
-                        alert('이벤트가 업데이트되었습니다');
+                        alert('Event Update');
                     },
                     error: function (data) {
-                        alert('문제가 발생했습니다!!!');
+                        alert('There is a problem!!!');
                     }
                 });
             },
 
             // 이벤트 클릭 시
             eventClick: function (event) {
-                if (confirm("정말로 삭제하시겠습니까?")) {
+                if (confirm("Are you sure you want to remove it?")) {
                     var id = event.id;
-
                     // 서버로 이벤트 삭제 요청 전송
                     $.ajax({
                         type: "GET",
@@ -126,10 +128,10 @@
                         dataType: "json",
                         success: function (data) {
                             calendar.fullCalendar('refetchEvents');
-                            alert('이벤트가 삭제되었습니다');
+                            alert('Event Removed');
                         },
                         error: function (data) {
-                            alert('문제가 발생했습니다!!!');
+                            alert('There is a problem!!!');
                         }
                     });
                 }
@@ -137,4 +139,3 @@
         });
     });
 </script>
-
