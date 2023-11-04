@@ -73,21 +73,18 @@
         </div>
     </div>
 
-    <!-- 추가된 부분: 모달 창 -->
+    <!-- 추가된 부분: 모달 창
     <div id="event-dialog" title="이벤트 정보 입력">
-        <label for="event-food"><strong>음식 이름</strong></label>
+        <label for="event-food">음식 이름:</label>
         <input type="text" id="event-food" name="event-food">
-        <label for="event-end"><strong>소비기한 마감일</strong></label>
-        <input type="text" id="event-end" name="event-end" disabled>
-        <label for="event-end"><strong>카테고리</strong></label><br>
-<!--        재료 <input type="radio" id="food" name="category">-->
-<!--        비재료 <input type="radio" id="no-food" name="category">-->
-        <select id="category" name="category">
-            <option value="food">재료</option>
-            <option value="no-food">비재료</option>
-        </select>
-    </div>
-    <!-- 모달 창 스타일 -->
+        <label for="event-start">시작 날짜:</label>
+        <input type="text" id="event-start" name="event-start" disabled>
+        <label for="event-end">종료 날짜:</label>
+        <input type="text" id="event-end" name="event-end">
+        <button id="save-event">저장</button>
+        <button id="cancel-event">취소</button>
+    </div> -->
+    <!-- 모달 창 스타일
     <style>
         /* 모달 대화 상자 스타일 */
         #event-dialog {
@@ -112,7 +109,7 @@
             margin-top: 10px;
             padding: 10px 20px;
         }
-    </style>
+    </style> -->
 
 {% include "./script.html" %}
     <!-- Footer-->

@@ -40,37 +40,6 @@
             <input type="submit" class="btn btn-primary" value="Sign Up">
         </form>
     </div>
-
-<!-- 중복 아이디 모달 창 -->
-<div class="modal fade" id="duplicateUsernameModal" tabindex="-1" role="dialog" aria-labelledby="duplicateUsernameModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="duplicateUsernameModalLabel">중복 아이디 알림</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        중복된 아이디가 이미 사용 중입니다. 다른 아이디를 사용하세요.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // 중복 아이디 모달 창 열기
-    if ('{{ duplicate_username }}' === 'True') {
-      $('#duplicateUsernameModal').modal('show');
-    }
-  });
-</script>
-
-
 {% include "./footer.html" %}
 </body>
 
