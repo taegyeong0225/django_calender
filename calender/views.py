@@ -1,71 +1,69 @@
 from django.shortcuts import render
 
-# Create your views here.
+# 필요한 모듈 임포트
 from django.http import JsonResponse
-from calender.models import Events
 
-def index(request):
-    all_events = Events.objects.all()
-    context = {
-        "events":all_events,
-    }
-    return render(request, 'landing.html', context)
+from django.shortcuts import render
+from .models import Events # 'calender' 앱의 'models.py'에서 'Events' 모델을 임포트
 
-'''
+# 메인 페이지 뷰
+# def index(request):
+#     all_events = Events.objects.all() # DB에서 모든 이벤트를 가져옴
+#     context = {
+#         "events": all_events,           # 템플릿에 전달할 컨텍스트
+#     }
+#     return render(request, 'landing.html', context) # 'landing.html' 템플릿으로 컨텍스트를 렌더링
+
+def user_events_view(request):
+    if request.user.is_authenticated:
+        user_events = Events.objects.filter(user=request.user)
+        return render(request, 'landing.html', {'events': user_events})
+    else:
+        # 사용자가 로그인하지 않았을 경우 처리
+        return render(request, 'landing.html')
+
+# 모든 이벤트 정보를 제공하는 뷰
 def all_events(request):
-    all_events = Events.objects.all() # 모든 이벤트 받아옴
-    out = []
+    all_events = Events.objects.all()   # DB에서 모든 이벤트를 가져옴
+    out = []                            # 응답으로 보낼 리스트 초기화
     for event in all_events:
-        out.append({
-            'title': event.name,
-            'id': event.id,
-            'start': event.start.strftime("%m/%d/%Y %H:%M:%S"),
-            'end': event.end.strftime("%m/%d/%Y" "%H:%M:%S"),
-        })
-    return JsonResponse(out, safe=False) # 클라이언트한테 전달
-'''
-def all_events(request):
-    all_events = Events.objects.all()
-    out = []
-    for event in all_events:
-        if event.start and event.end:  # start와 end가 None이 아닌 경우에만 strftime을 호출
+        if event.end:                   # 이벤트 종료 시간이 설정되어 있을 경우만 처리
             out.append({
-                'title': event.name,
-                'id': event.id,
-                'start': event.start.strftime("%m/%d/%Y %H:%M:%S"),
-                'end': event.end.strftime("%m/%d/%Y %H:%M:%S"),
+                'title': event.name,    # 이벤트 이름
+                'id': event.id,         # 이벤트 ID
+                'end': event.end.strftime("%m/%d/%Y %H:%M:%S"), # 이벤트 종료 시간을 문자열로 변환
             })
-    return JsonResponse(out, safe=False)
+    return JsonResponse(out, safe=False)                        # JSON 형태로 변환하여 응답
 
+# 새로운 이벤트를 추가하는 뷰
 def add_event(request):
-    start = request.GET.get("start", None)
-    end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
-    event = Events(name=str(title), start=start, end=end)
-    event.save()
-    data = {}
-    return JsonResponse(data)
+    end = request.GET.get("end", None)          # 요청에서 'end' 매개변수 값을 가져옴
+    title = request.GET.get("title", None)      # 요청에서 'title' 매개변수 값을 가져옴
+    event = Events(name=str(title), end=end)    # 새로운 이벤트 객체 생성
+    event.save()                                # 이벤트를 DB에 저장
+    data = {}                                   # 응답 데이터 초기화
+    return JsonResponse(data)                   # 빈 JSON 응답 반환
 
-
-
-
+# 기존 이벤트를 업데이트하는 뷰
 def update(request):
-    start = request.GET.get("start", None)
-    end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
-    id = request.GET.get("id", None)
-    event = Events.objects.get(id=id)
-    event.start = start
-    event.end = end
-    event.name = title
-    event.save()
-    data = {}
-    return JsonResponse(data)
+    # start = request.GET.get("start", None) # 'start' 매개변수는 사용하지 않음
+    end = request.GET.get("end", None)      # 요청에서 'end' 매개변수 값을 가져옴
+    title = request.GET.get("title", None)  # 요청에서 'title' 매개변수 값을 가져옴
+    id = request.GET.get("id", None)        # 요청에서 'id' 매개변수 값을 가져옴
+    event = Events.objects.get(id=id)       # 해당 ID를 가진 이벤트 객체를 DB에서 가져옴
+    # start = start                         # 'start' 값을 업데이트 (현재는 주석 처리됨)
+    event.end = end                         # 'end' 값을 업데이트
+    event.name = title                      # 'title' 값을 업데이트
+    event.save()                            # 변경 사항을 DB에 저장
+    data = {}                               # 응답 데이터 초기화
+    return JsonResponse(data)               # 빈 JSON 응답 반환
 
-
+# 이벤트를 삭제하는 뷰
 def remove(request):
-    id = request.GET.get("id", None)
-    event = Events.objects.get(id=id)
-    event.delete()
-    data = {}
-    return JsonResponse(data)
+    id = request.GET.get("id", None)        # 요청에서 'id' 매개변수 값을 가져옴
+    event = Events.objects.get(id=id)       # 해당 ID를 가진 이벤트 객체를 DB에서 가져옴
+    event.delete()                          # 이벤트를 DB에서 삭제
+    data = {}                               # 응답 데이터 초기화
+    return JsonResponse(data)               # 빈 JSON 응답 반환
+
+

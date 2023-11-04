@@ -22,7 +22,7 @@ from accounts import views as accounts_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', calender_views.index, name='index'),
+    path('', calender_views.user_events_view, name='user_events_view'),
     path('all_events/', calender_views.all_events, name='all_events'),
     path('add_event/', calender_views.add_event, name='add_event'),
     path('update/', calender_views.update, name='update'),
