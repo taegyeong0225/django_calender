@@ -4,38 +4,28 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from calender.models import Events
 
+
 def index(request):
     all_events = Events.objects.all()
     context = {
-        "events":all_events,
+        "events": all_events,
     }
-    return render(request, 'landing.html', context)
+    return render(request, 'index.html', context)
 
-'''
+
 def all_events(request):
-    all_events = Events.objects.all() # 모든 이벤트 받아옴
+    all_events = Events.objects.all()
     out = []
     for event in all_events:
         out.append({
             'title': event.name,
             'id': event.id,
-            'start': event.start.strftime("%m/%d/%Y %H:%M:%S"),
-            'end': event.end.strftime("%m/%d/%Y" "%H:%M:%S"),
+            'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),
+            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
         })
-    return JsonResponse(out, safe=False) # 클라이언트한테 전달
-'''
-def all_events(request):
-    all_events = Events.objects.all()
-    out = []
-    for event in all_events:
-        if event.start and event.end:  # start와 end가 None이 아닌 경우에만 strftime을 호출
-            out.append({
-                'title': event.name,
-                'id': event.id,
-                'start': event.start.strftime("%m/%d/%Y %H:%M:%S"),
-                'end': event.end.strftime("%m/%d/%Y %H:%M:%S"),
-            })
+
     return JsonResponse(out, safe=False)
+
 
 def add_event(request):
     start = request.GET.get("start", None)
@@ -45,8 +35,6 @@ def add_event(request):
     event.save()
     data = {}
     return JsonResponse(data)
-
-
 
 
 def update(request):

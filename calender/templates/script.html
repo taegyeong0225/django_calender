@@ -1,163 +1,98 @@
 <!-- script -->
 <!-- FullCalendar 초기화 -->
 <script>
-    $(document).ready(function () {
-        // FullCalendar 인스턴스 생성
-        var calendar = $('#calendar').fullCalendar({
-            /* header 부분
-                왼쪽 : 이전달, 다음달, today 버튼
-                중앙 : 타이틀 (달 이름)
-                오른쪽 : 보이는 형식 ()
-            */
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,listWeek',
-            },
+   $(document).ready(function () {
+       var calendar = $('#calendar').fullCalendar({
+           header: {
+               left: 'prev,next today',
+               center: 'title',
+               right: 'month,listWeek'
+           },
+           events: '/all_events',
+           selectable: true,
+           selectHelper: true,
+           editable: true,
+           eventLimit: true,
+           select: function (start, end, allDay) {
+               var title = prompt("Enter Event Title");
+               if (title) {
+                   var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
+                   var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+                   $.ajax({
+                       type: "GET",
+                       url: '/add_event',
+                       data: {'title': title, 'start': start, 'end': end},
+                       dataType: "json",
+                       success: function (data) {
+                           calendar.fullCalendar('refetchEvents');
+                           alert("Added Successfully");
+                       },
+                       error: function (data) {
+                           alert('There is a problem!!!');
+                       }
+                   });
+               }
+           },
+           eventResize: function (event) {
+               var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+               var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+               var title = event.title;
+               var id = event.id;
+               $.ajax({
+                   type: "GET",
+                   url: '/update',
+                   data: {'title': title, 'start': start, 'end': end, 'id': id},
+                   dataType: "json",
+                   success: function (data) {
+                       calendar.fullCalendar('refetchEvents');
+                       alert('Event Update');
+                   },
+                   error: function (data) {
+                       alert('There is a problem!!!');
+                   }
+               });
+           },
 
+           eventDrop: function (event) {
+               var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
+               var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
+               var title = event.title;
+               var id = event.id;
+               $.ajax({
+                   type: "GET",
+                   url: '/update',
+                   data: {'title': title, 'start': start, 'end': end, 'id': id},
+                   dataType: "json",
+                   success: function (data) {
+                       calendar.fullCalendar('refetchEvents');
+                       alert('Event Update');
+                   },
+                   error: function (data) {
+                       alert('There is a problem!!!');
+                   }
+               });
+           },
 
-            // 이벤트 데이터를 가져올 URL 설정
-            events: '/all_events',
-            selectable: true,
-            selectHelper: true,
-            editable: true,
-            eventLimit: true,
+           eventClick: function (event) {
+               if (confirm("Are you sure you want to remove it?")) {
+                   var id = event.id;
+                   $.ajax({
+                       type: "GET",
+                       url: '/remove',
+                       data: {'id': id},
+                       dataType: "json",
+                       success: function (data) {
+                           calendar.fullCalendar('refetchEvents');
+                           alert('Event Removed');
+                       },
+                       error: function (data) {
+                           alert('There is a problem!!!');
+                       }
+                   });
+               }
+           },
 
-            /* 날짜를 선택할 때
-            select: function (start, end, allDay) {
-                var foodName = "";
-                var startDate = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                var endDate = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
+       });
+   });
 
-                // 모달 대화 상자 열기
-                $("#event-food").val("");
-                $("#event-start").val(startDate);
-                $("#event-end").val(endDate);
-
-                $("#event-dialog").dialog({
-                    title: '이벤트 정보 입력',
-                    buttons: {
-                        '저장': function () {
-                            foodName = $("#event-food").val();
-                            startDate = $("#event-start").val();
-                            endDate = $("#event-end").val();
-
-                            // 서버로 이벤트 데이터 전송
-                            $.ajax({
-                                type: "GET",
-                                url: '/add_event',
-                                data: {'title': foodName, 'start': startDate, 'end': endDate},
-                                dataType: "json",
-                                success: function (data) {
-                                    calendar.fullCalendar('refetchEvents');
-                                    alert("Added Successfully");
-                                    $("#event-dialog").dialog('close');
-                                },
-                                error: function (data) {
-                                    alert('There is a problem!!!');
-                                }
-                            });
-                        },
-                        '취소': function () {
-                            $("#event-dialog").dialog('close');
-                        }
-                    },
-                    close: function () {
-                        // 다이얼로그가 닫힐 때 입력 값 초기화
-                        $("#event-food").val("");
-                        $("#event-start").val("");
-                        $("#event-end").val("");
-                    },
-                    modal: true
-                });
-            }, */
-            // 날짜를 선택할 때
-            select: function (start, end, allDay) {
-                var title = prompt("음식 정보를 입력하세요!");
-                if (title) {
-                    var start = $.fullCalendar.formatDate(start, "Y-MM-DD HH:mm:ss");
-                    var end = $.fullCalendar.formatDate(end, "Y-MM-DD HH:mm:ss");
-                    // 서버로 이벤트 데이터 전송
-                    $.ajax({
-                        type: "GET",
-                        url: '/add_event',
-                        data: {'title': title, 'start': start, 'end': end},
-                        dataType: "json",
-                        success: function (data) {
-                            calendar.fullCalendar('refetchEvents');
-                            alert("Added Successfully");
-                        },
-                        error: function (data) {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                }
-            },
-
-            // 이벤트 크기 조정 시
-            eventResize: function (event) {
-                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-                var title = event.title;
-                var id = event.id;
-                // 서버로 이벤트 데이터 전송
-                $.ajax({
-                    type: "GET",
-                    url: '/update',
-                    data: {'title': title, 'start': start, 'end': end, 'id': id},
-                    dataType: "json",
-                    success: function (data) {
-                        calendar.fullCalendar('refetchEvents');
-                        alert('Event Update');
-                    },
-                    error: function (data) {
-                        alert('There is a problem!!!');
-                    }
-                });
-            },
-
-            // 이벤트 드래그 시
-            eventDrop: function (event) {
-                var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD HH:mm:ss");
-                var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD HH:mm:ss");
-                var title = event.title;
-                var id = event.id;
-                // 서버로 이벤트 데이터 전송
-                $.ajax({
-                    type: "GET",
-                    url: '/update',
-                    data: {'title': title, 'start': start, 'end': end, 'id': id},
-                    dataType: "json",
-                    success: function (data) {
-                        calendar.fullCalendar('refetchEvents');
-                        alert('Event Update');
-                    },
-                    error: function (data) {
-                        alert('There is a problem!!!');
-                    }
-                });
-            },
-
-            // 이벤트 클릭 시
-            eventClick: function (event) {
-                if (confirm("Are you sure you want to remove it?")) {
-                    var id = event.id;
-                    // 서버로 이벤트 삭제 요청 전송
-                    $.ajax({
-                        type: "GET",
-                        url: '/remove',
-                        data: {'id': id},
-                        dataType: "json",
-                        success: function (data) {
-                            calendar.fullCalendar('refetchEvents');
-                            alert('Event Removed');
-                        },
-                        error: function (data) {
-                            alert('There is a problem!!!');
-                        }
-                    });
-                }
-            },
-        });
-    });
 </script>
