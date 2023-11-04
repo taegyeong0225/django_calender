@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from django.shortcuts import render
 from .models import Events # 'calender' 앱의 'models.py'에서 'Events' 모델을 임포트
+from django.contrib.auth.decorators import login_required # login 확인
 
 
 def user_events_view(request):
@@ -33,16 +34,19 @@ def all_events(request):
         return JsonResponse({'error': 'User not authenticated'}, status=400)
 
 
-
-
 # 새로운 이벤트를 추가하는 뷰
+@login_required  # 로그인한 사용자만 접근할 수 있도록 함
 def add_event(request):
-    end = request.GET.get("end", None)          # 요청에서 'end' 매개변수 값을 가져옴
-    title = request.GET.get("title", None)      # 요청에서 'title' 매개변수 값을 가져옴
-    event = Events(name=str(title), end=end)    # 새로운 이벤트 객체 생성
-    event.save()                                # 이벤트를 DB에 저장
-    data = {}                                   # 응답 데이터 초기화
-    return JsonResponse(data)                   # 빈 JSON 응답 반환
+    if request.method == 'GET':
+        end = request.GET.get("end", None)              # 요청에서 'end' 매개변수 값을 가져옴
+        title = request.GET.get("title", None)          # 요청에서 'title' 매개변수 값을 가져옴
+        user = request.user                             # 현재 로그인한 사용자를 가져옴
+        event = Events(name=str(title), end=end, user=user)  # 새로운 이벤트 객체 생성, 현재 사용자를 포함
+        event.save()                                    # 이벤트를 DB에 저장
+        data = {'status': 'success'}                    # 응답 데이터에 성공 상태 추가
+        return JsonResponse(data)                       # JSON 응답 반환
+    else:
+        return JsonResponse({'status': 'invalid request'}, status=400)  # 잘못된 요청에 대한 응답
 
 # 기존 이벤트를 업데이트하는 뷰
 def update(request):
