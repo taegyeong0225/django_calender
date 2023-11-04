@@ -6,13 +6,6 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Events # 'calender' 앱의 'models.py'에서 'Events' 모델을 임포트
 
-# 메인 페이지 뷰
-# def index(request):
-#     all_events = Events.objects.all() # DB에서 모든 이벤트를 가져옴
-#     context = {
-#         "events": all_events,           # 템플릿에 전달할 컨텍스트
-#     }
-#     return render(request, 'landing.html', context) # 'landing.html' 템플릿으로 컨텍스트를 렌더링
 
 def user_events_view(request):
     if request.user.is_authenticated:
@@ -22,18 +15,25 @@ def user_events_view(request):
         # 사용자가 로그인하지 않았을 경우 처리
         return render(request, 'landing.html')
 
-# 모든 이벤트 정보를 제공하는 뷰
+# 캘린더에 이벤트 정보를 제공하는 뷰
 def all_events(request):
-    all_events = Events.objects.all()   # DB에서 모든 이벤트를 가져옴
-    out = []                            # 응답으로 보낼 리스트 초기화
-    for event in all_events:
-        if event.end:                   # 이벤트 종료 시간이 설정되어 있을 경우만 처리
-            out.append({
-                'title': event.name,    # 이벤트 이름
-                'id': event.id,         # 이벤트 ID
-                'end': event.end.strftime("%m/%d/%Y %H:%M:%S"), # 이벤트 종료 시간을 문자열로 변환
-            })
-    return JsonResponse(out, safe=False)                        # JSON 형태로 변환하여 응답
+    if request.user.is_authenticated:  # 사용자가 인증되었는지 확인
+        user_events = Events.objects.filter(user=request.user)  # 현재 사용자의 이벤트만 가져옴
+        out = []  # 응답으로 보낼 리스트 초기화
+        for event in user_events:
+            if event.end:  # 이벤트 종료 시간이 설정되어 있을 경우만 처리
+                out.append({
+                    'title': event.name,  # 이벤트 이름
+                    'id': event.id,       # 이벤트 ID
+                    'end': event.end.strftime("%m/%d/%Y %H:%M:%S"),  # 이벤트 종료 시간을 문자열로 변환
+                })
+        return JsonResponse(out, safe=False)  # JSON 형태로 변환하여 응답
+    else:
+        # 사용자가 인증되지 않았을 경우 처리
+        return JsonResponse({'error': 'User not authenticated'}, status=400)
+
+
+
 
 # 새로운 이벤트를 추가하는 뷰
 def add_event(request):

@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Events(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default="None")  # Relate each event to a specific user
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255,null=False,blank=False, default="입력 필요")
     end = models.DateTimeField(null=True,blank=False)
