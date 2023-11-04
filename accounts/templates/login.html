@@ -37,6 +37,65 @@
             <input type="submit" class="btn btn-primary" value="Login">
         </form>
     </div>
-</div
+</div>
+
+   <!-- 다른 비밀번호 모달 창 -->
+    <div class="modal fade" id="notEqualPasswordModal" tabindex="-1" role="dialog" aria-labelledby="notEqualPasswordLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="notEqualPasswordModalLabel">비밀번호 불일치</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            비밀번호가 불일치 합니다. 다시 입력해주세요.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // 모달 창 열기
+        if ('{{ wrong_password }}' === 'True') {
+          $('#notEqualPasswordModal').modal('show');
+        }
+      });
+    </script>
+
+    <!-- 존재하지 않는 아이디 -->
+    <div class="modal fade" id="notExistIdModal" tabindex="-1" role="dialog" aria-labelledby="notExistIdModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="notExistIdModalLabel">존재하지 않는 아이디</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            존재하지 않는 아이디입니다.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // 모달 창 열기
+        if ('{{ user_does_not_exist }}' === 'True') {
+          $('#notExistIdModal').modal('show');
+        }
+      });
+    </script>
+
 {% include "./footer.html" %}
 </body>
