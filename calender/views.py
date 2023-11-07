@@ -29,16 +29,19 @@ def index(request):
     }
     return render(request, 'calendar.html', context)
 
+
+@login_required(login_url='accounts/login/')
 def all_events(request):
-    all_events = Events.objects.all()
+    # 현재 로그인한 사용자와 연결된 이벤트들만 가져옵니다.
+    user_events = Events.objects.filter(user=request.user)
     out = []
-    for event in all_events:
+    for event in user_events:
         out.append({
             'title': event.name,
             'id': event.id,
-            'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),
-            'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
-            'user_id': request.user.id  # 로그인한 사용자의 ID를 넣어줍니다.
+            'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
+            'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
+            'user_id': event.user.id  # 로그인한 사용자의 ID를 넣어줍니다.
         })
 
     return JsonResponse(out, safe=False)
