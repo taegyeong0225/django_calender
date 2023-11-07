@@ -1,16 +1,22 @@
-from django.shortcuts import render
-
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from calender.models import Events
 
-
 def index(request):
-    all_events = Events.objects.all()
+    # 사용자가 로그인했는지 확인합니다.
+    if request.user.is_authenticated:
+        # 로그인한 사용자의 이벤트만 필터링합니다.
+        user_events = Events.objects.filter(user=request.user)
+    else:
+        # 비로그인 사용자에게는 이벤트를 보여주지 않습니다.
+        user_events = Events.objects.none()
+
     context = {
-        "events": all_events,
+        "events": user_events,
     }
     return render(request, 'calendar.html', context)
+
 
 
 def all_events(request):
@@ -22,20 +28,23 @@ def all_events(request):
             'id': event.id,
             'start': event.start.strftime("%m/%d/%Y, %H:%M:%S"),
             'end': event.end.strftime("%m/%d/%Y, %H:%M:%S"),
+            'user_id': request.user.id  # 로그인한 사용자의 ID를 넣어줍니다.
         })
 
     return JsonResponse(out, safe=False)
 
 
+@login_required
 def add_event(request):
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
     title = request.GET.get("title", None)
-    event = Events(name=str(title), start=start, end=end)
+
+    event = Events(name=str(title), start=start, end=end, user=request.user)
     event.save()
+
     data = {}
     return JsonResponse(data)
-
 
 def update(request):
     start = request.GET.get("start", None)
