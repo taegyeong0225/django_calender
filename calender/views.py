@@ -6,16 +6,6 @@ from django.shortcuts import get_object_or_404
 from .models import Events
 
 
-# @login_required(login_url='accounts/login/')  # 로그인하지 않은 사용자를 로그인 페이지로 리다이렉트합니다.
-# def index(request):
-#     # 현재 로그인한 사용자와 연결된 이벤트들만 가져옵니다.
-#     user_events = Events.objects.filter(user=request.user)
-#
-#     context = {
-#         "events": user_events,
-#     }
-#     return render(request, 'calendar.html', context)
-
 def index(request):
     # 로그인한 사용자의 이벤트만 가져옵니다. 로그인하지 않았다면 모든 이벤트를 가져옵니다.
     user_events = Events.objects.filter(user=request.user) if request.user.is_authenticated else Events.objects.all()
