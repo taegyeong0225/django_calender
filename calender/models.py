@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User # user 연결
 
-# Create your models here.
+# calender/models.py
 class Events(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
