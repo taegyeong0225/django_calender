@@ -38,14 +38,24 @@ def all_events(request):
 # 이벤트를 추가할 때 동작하는 함수
 @login_required
 def add_event(request):
+    # 요청으로부터 데이터 가져오기
+    title = request.GET.get("title", None)
     start = request.GET.get("start", None)
     end = request.GET.get("end", None)
-    title = request.GET.get("title", None)
+    f_category = request.GET.get("f_category", None)  # f_category 값 가져오기
 
-    event = Events(name=str(title), start=start, end=end, user=request.user)
+    # 새로운 이벤트 객체 생성 및 저장
+    event = Events(
+        name=str(title),
+        start=start,
+        end=end,
+        f_category=f_category,  # 카테고리 설정
+        user=request.user
+    )
     event.save()
 
-    data = {}
+    # JSON 응답 반환
+    data = {'id': event.id}  # 생성된 이벤트의 ID를 응답 데이터에 포함
     return JsonResponse(data)
 
 # 이벤트를 수정할 때 동작하는 함수
