@@ -23,6 +23,8 @@ select: function (start, end, allDay) {
     $("#event-food").val("");
     $("#event-start").val(startDate);
     $("#event-end").val(endDate);
+    var category = $("#category").val(); // 카테고리
+
 
     $("#event-dialog").dialog({
         title: '이벤트 정보 입력',
@@ -37,7 +39,7 @@ select: function (start, end, allDay) {
                 $.ajax({
                     type: "GET",
                     url: '/add_event',
-                    data: {'title': foodName, 'start': startDate, 'end': endDate, 'category': category}, // 카테고리 정보 추가
+                    data: {'title': foodName, 'start': startDate, 'end': endDate, 'f_categories': category}, // 카테고리 정보 추가
                     dataType: "json",
                     success: function (data) {
                         calendar.fullCalendar('refetchEvents');

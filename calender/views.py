@@ -30,7 +30,7 @@ def all_events(request):
             'id': event.id,
             'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
             'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
-            'user_id': event.user.id  # 로그인한 사용자의 ID를 넣어줍니다.
+            'user_id': event.user.id,  # 로그인한 사용자의 ID를 넣어줍니다.
         })
 
     return JsonResponse(out, safe=False)

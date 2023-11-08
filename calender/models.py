@@ -10,7 +10,7 @@ class Events(models.Model):
     start = models.DateTimeField(null=True,blank=True)
     end = models.DateTimeField(null=True,blank=True)
 
-    f_categories = models.CharField(max_length=50, null=True, blank=True)
+    f_category = models.CharField(max_length=50, null=True, blank=True)
 
     class Meta:
         db_table = "tblevents"
