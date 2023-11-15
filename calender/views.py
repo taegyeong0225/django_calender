@@ -5,6 +5,13 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from .models import Events
 
+from datetime import datetime, timedelta
+from apscheduler.schedulers.background import BackgroundScheduler
+import pytz
+from django.conf import settings
+
+import smtplib
+from email.mime.text import MIMEText
 
 def index(request):
     # 로그인한 사용자의 이벤트만 가져옵니다. 로그인하지 않았다면 모든 이벤트를 가져옵니다.
@@ -35,7 +42,53 @@ def all_events(request):
 
     return JsonResponse(out, safe=False)
 
-# 이벤트를 추가할 때 동작하는 함수
+# 이메일 전송 함수
+def send_email_function(email, name, date):
+    # 이메일 서버 연결 정보
+    smtp_server = 'smtp.gmail.com'  # SMTP 서버 주소 (Gmail의 경우)
+    smtp_port = 587  # SMTP 서버 포트 (Gmail의 TLS 포트), 465와의 차이는?
+    smtp_username = 'sw.project.django@gmail.com'  # 발신자 Gmail 계정
+    smtp_password = 'brdo ybhi dopd wibz'  # 발신자 Gmail 비밀번호
+
+
+    # 이메일 메세지 설정
+    subject = f' 장고 : {name}의 소비기한이 3일 남았습니다!'  # 이메일 제목
+    body = f'{name}의 소비기한이 3일 남았습니다!  +++ [웹크롤링 음식명 내용]'  # 이메일 본문 내용
+    sender = 'sw.project.django@gmail.com'  # 발신자 이메일 주소
+    # receiver = 'taegeong@naver.com'  # 수신자 이메일 주소
+
+    # 이메일 메세지 생성
+    msg = MIMEText(body)  # 이메일 본문을 MIMEText 객체로 생성
+    msg['Subject'] = subject  # 이메일 제목 설정
+    msg['From'] = sender  # 발신자 이메일 주소 설정
+    msg['To'] = email  # 수신자 이메일 주소 설정
+
+    # 이메일 발송
+    with smtplib.SMTP(smtp_server, smtp_port) as server:  # SMTP 서버 연결
+        server.starttls()  # TLS(전송 계층 보안) 시작
+        server.login(smtp_username, smtp_password)  # 이메일 계정 로그인
+        server.send_message(msg)  # 메시지 발송
+
+
+# 이메일 스케줄링 함수
+def schedule_email(user_email, title, event_date):
+    # 날짜 3일 전 계산
+    # send_date = datetime.strptime(event_date, "%Y-%m-%d") - timedelta(days=3)
+    # 'YYYY-MM-DD HH:MM:SS' 형식으로 날짜와 시간 모두를 해석
+    send_date = datetime.strptime(event_date, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)
+
+    timezone = pytz.timezone('Asia/Seoul')
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        send_email_function,
+        'date',
+        run_date=send_date.replace(tzinfo=timezone),
+        args=[user_email, title, event_date]
+    )
+    scheduler.start()
+
+
 @login_required
 def add_event(request):
     # 요청으로부터 데이터 가져오기
@@ -53,6 +106,13 @@ def add_event(request):
         user=request.user
     )
     event.save()
+
+    # 사용자 이메일과 이벤트 날짜 가져오기
+    user_email = request.user.email
+    event_date = start.split('T')[0]  # 'YYYY-MM-DD' 형식으로 변환
+
+    # 이메일 스케줄링
+    schedule_email(user_email, title, event_date)
 
     # JSON 응답 반환
     data = {'id': event.id}  # 생성된 이벤트의 ID를 응답 데이터에 포함
@@ -94,3 +154,4 @@ def remove(request):
 
     data = {"status": "success"}
     return JsonResponse(data)
+

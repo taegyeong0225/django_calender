@@ -35,9 +35,3 @@ urlpatterns = [
     # path('signup/', signup, name='signup'),
     # path('accounts/', include('allauth.urls')), # 로그인 사이트 주소
 ]
-
-
-
-# urlpatterns = [
-#     path('signup/', signup, name='signup'),
-# ]
