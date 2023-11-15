@@ -48,10 +48,9 @@ def send_email_function(email, name, date):
     smtp_server = 'smtp.gmail.com'  # SMTP 서버 주소 (Gmail의 경우)
     smtp_port = 587  # SMTP 서버 포트 (Gmail의 TLS 포트), 465와의 차이는?
 
-
     # 이메일 메세지 설정
     subject = f' 장고 : {name}의 소비기한이 3일 남았습니다!'  # 이메일 제목
-    body = f'{name}의 소비기한이 3일 남았습니다!  +++ [웹크롤링 음식명 내용]'  # 이메일 본문 내용
+    body = f'{name}의 소비기한이 3일 남았습니다!  (소비기한: {date}) +++ [웹크롤링 음식명 내용]'  # 이메일 본문 내용
     sender = 'sw.project.django@gmail.com'  # 발신자 이메일 주소
     # receiver = 'taegeong@naver.com'  # 수신자 이메일 주소
 
