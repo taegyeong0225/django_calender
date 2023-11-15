@@ -145,6 +145,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+EMAIL_HOST_USER = 'sw.project.django@gmail.com'
+EMAIL_HOST_PASSWORD = 'brdo ybhi dopd wibz'
+
+
 # AUTHENTICATION_BACKENDS = (
 #     'django.contrib.auth.backends.ModelBackend',
 #     'allauth.account.auth_backends.AuthenticationBackend',

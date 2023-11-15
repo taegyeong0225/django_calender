@@ -47,8 +47,6 @@ def send_email_function(email, name, date):
     # 이메일 서버 연결 정보
     smtp_server = 'smtp.gmail.com'  # SMTP 서버 주소 (Gmail의 경우)
     smtp_port = 587  # SMTP 서버 포트 (Gmail의 TLS 포트), 465와의 차이는?
-    smtp_username = 'sw.project.django@gmail.com'  # 발신자 Gmail 계정
-    smtp_password = 'brdo ybhi dopd wibz'  # 발신자 Gmail 비밀번호
 
 
     # 이메일 메세지 설정
@@ -66,7 +64,7 @@ def send_email_function(email, name, date):
     # 이메일 발송
     with smtplib.SMTP(smtp_server, smtp_port) as server:  # SMTP 서버 연결
         server.starttls()  # TLS(전송 계층 보안) 시작
-        server.login(smtp_username, smtp_password)  # 이메일 계정 로그인
+        server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)  # 이메일 계정 로그인
         server.send_message(msg)  # 메시지 발송
 
 
