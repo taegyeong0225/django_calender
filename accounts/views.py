@@ -73,7 +73,7 @@ def login(request):
             user = User.objects.get(username=username)
             if user is not None and user.check_password(password):
                 auth.login(request, user)
-                return redirect('home')
+                return redirect('home') # 로그인 후 홈화면으로 이동
             else:
                 wrong_password = True
         except User.DoesNotExist:

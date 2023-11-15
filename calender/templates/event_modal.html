@@ -1,12 +1,13 @@
-   <!-- 추가된 부분: 모달 창 -->
+<!-- calender/templates/event_modal.html -->
+  <!-- 추가된 부분: 모달 창 -->
 
     <div id="event-dialog" title="이벤트 정보 입력">
         <label for="event-food">음식 이름</label>
         <input type="text" id="event-food" name="event-food">
-        <label for="event-start">시작 날짜</label>
+        <label for="event-start">소비기한 마감일</label>
         <input type="text" id="event-start" name="event-start" disabled>
-        <label for="event-end">소비기한 마감일</label>
-        <input type="text" id="event-end" name="event-end" disabled>
+<!--        <input type="text" id="event-end" name="event-end" disabled>-->
+        <input type="text" id="event-end" name="event-end" style="display: none;">
         <label for="category">카테고리</label> <br>
         <select id="category" name="category">
             <option value="food" selected>재료</option>
