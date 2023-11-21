@@ -13,9 +13,9 @@ class EmailTest(TestCase):
         mock_smtp.return_value.__enter__.return_value = mock_server
 
         # 함수 호출
-        email = 'test@example.com'
+        email = 'taegeong@naver.com'
         name = '테스트 재료'
-        date = '2023-11-20'
+        date = '2023-11-25'
         send_email_function(email, name, date)
 
         # 함수가 호출되었는지 검증

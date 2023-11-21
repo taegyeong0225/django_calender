@@ -43,8 +43,7 @@ def all_events(request):
     return JsonResponse(out, safe=False)
 
 # 이메일 전송 함수
-def send_email_function(email, name, date):
-    # 이메일 서버 연결 정보
+def send_email_function(email, name, date):    # 이메일 서버 연결 정보
     smtp_server = 'smtp.gmail.com'  # SMTP 서버 주소 (Gmail의 경우)
     smtp_port = 587  # SMTP 서버 포트 (Gmail의 TLS 포트), 465와의 차이는?
 

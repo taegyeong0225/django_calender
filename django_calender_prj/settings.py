@@ -100,7 +100,10 @@ DATABASES = {
         'PASSWORD': '0000',
         'HOST':'localhost',
         'PORT': '3306',
-    }
+    },
+    'TEST': {
+            'NAME': 'test_calender',  # 테스트 데이터베이스 이름
+    },
 }
 
 
@@ -145,6 +148,14 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# 이메일을 위한 설정
+# settings.py
+
+# 이메일 서버 설정
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'sw.project.django@gmail.com'
 EMAIL_HOST_PASSWORD = 'brdo ybhi dopd wibz'
 
