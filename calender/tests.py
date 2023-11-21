@@ -1,7 +1,7 @@
 # calender/tests.py
 
 
-from django.test import TestCase
+# from django.test import TestCase
 from .views import send_email_function
 from unittest.mock import patch, MagicMock
 
