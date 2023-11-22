@@ -51,10 +51,15 @@ class EmailTest(SimpleTestCase):
         args, kwargs = mock_server.send_message.call_args
         sent_message = args[0]
 
-        # 이메일 본문 디코딩
-        payload = sent_message.get_payload(decode=True)
-        decoded_payload = payload.decode('utf-8')
+        expected_date_format_in_payload = '소비기한: 2023-11-25'
 
         self.assertIn(email, sent_message['To'])
-        self.assertIn(name, decoded_payload)
-        self.assertIn(date, decoded_payload)
+
+        # Handling multipart messages
+        if sent_message.is_multipart():
+            payload = ''.join(part.get_payload(decode=True).decode('utf-8') for part in sent_message.get_payload())
+        else:
+            payload = sent_message.get_payload(decode=True).decode('utf-8')
+
+        self.assertIn(name, payload)
+        self.assertIn(expected_date_format_in_payload, payload)
