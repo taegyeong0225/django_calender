@@ -102,15 +102,15 @@ def send_email_function(email, name, date):    # 이메일 서버 연결 정보
 
 # 이메일 스케줄링 함수
 def schedule_email(user_email, title, event_date):
-    # 날짜 3일 전 계산
-    send_date = datetime.strptime(event_date, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)
     timezone = pytz.timezone('Asia/Seoul')
+    send_date = datetime.strptime(event_date, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)
+    send_date_with_tz = timezone.localize(send_date)
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(
         send_email_function,
         'date',
-        run_date=send_date.replace(tzinfo=timezone),
+        run_date=send_date_with_tz,
         args=[user_email, title, event_date]
     )
     scheduler.start()
