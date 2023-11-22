@@ -7,7 +7,7 @@ from unittest.mock import patch, MagicMock
 
 # calender/tests.py
 
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.contrib.auth.models import User
 from django.test import Client
 
@@ -31,7 +31,7 @@ class UserEmailTest(TestCase):
 # python manage.py test calender.tests.UserEmailTest
 
 # 자동 메일 전송이 되는지 확인
-class EmailTest(TestCase):
+class EmailTest(SimpleTestCase):
     @patch('calender.views.smtplib.SMTP')
     def test_send_email_function(self, mock_smtp):
         # Mock 객체 설정
@@ -50,6 +50,11 @@ class EmailTest(TestCase):
         # send_message가 호출된 인자 검증
         args, kwargs = mock_server.send_message.call_args
         sent_message = args[0]
+
+        # 이메일 본문 디코딩
+        payload = sent_message.get_payload(decode=True)
+        decoded_payload = payload.decode('utf-8')
+
         self.assertIn(email, sent_message['To'])
-        self.assertIn(name, sent_message.get_payload())
-        self.assertIn(date, sent_message.get_payload())
+        self.assertIn(name, decoded_payload)
+        self.assertIn(date, decoded_payload)
