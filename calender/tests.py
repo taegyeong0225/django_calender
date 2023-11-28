@@ -30,7 +30,7 @@ class UserEmailTest(TestCase):
 
 # python manage.py test calender.tests.UserEmailTest
 
-# 자동 메일 전송이 되는지 확인
+# 자동 메일 전송이 되는지 확인 -> 성공
 class EmailTest(SimpleTestCase):
     @patch('calender.views.smtplib.SMTP')
     def test_send_email_function(self, mock_smtp):
@@ -63,3 +63,22 @@ class EmailTest(SimpleTestCase):
 
         self.assertIn(name, payload)
         self.assertIn(expected_date_format_in_payload, payload)
+
+
+from django.test import TestCase
+from django.urls import reverse
+from .models import Events
+from django.contrib.auth.models import User
+
+class RemoveEventTestCase(TestCase):
+    def setUp(self):
+        # 테스트 사용자와 이벤트 생성
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.event = Events.objects.create(name='Test Event', user=self.user)
+
+    def test_remove_event(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('remove-event'), {'id': self.event.id})
+        self.assertEqual(response.status_code, 200)
+        # 이벤트가 삭제되었는지 확인
+        self.assertFalse(Events.objects.filter(id=self.event.id).exists())

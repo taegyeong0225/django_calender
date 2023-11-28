@@ -106,7 +106,7 @@
            },
            // event를 눌렀을 때 -> 삭제
            eventClick: function (event) {
-               if (confirm("Are you sure you want to remove it?")) {
+               if (confirm("해당 재료의 소비기한 기록을 삭제하시겠습니까?")) {
                    var id = event.id;
                    $.ajax({
                        type: "GET",
@@ -115,7 +115,7 @@
                        dataType: "json",
                        success: function (data) {
                            calendar.fullCalendar('refetchEvents');
-                           alert('Event Removed');
+                           alert('삭제되었습니다.');
                        },
                        error: function (data) {
                            alert('There is a problem!!!');
@@ -124,7 +124,33 @@
                }
            },
 
+
        });
+       function loadCategoryEvents(category) {
+            $.ajax({
+                type: "GET",
+                url: `/events/${category}/`, // 카테고리별 이벤트를 가져오는 URL
+                dataType: "json",
+                success: function (data) {
+                    calendar.fullCalendar('removeEventSources');
+                    calendar.fullCalendar('addEventSource', data);
+                },
+                error: function (error) {
+                    console.error(`Error loading ${category} events:`, error);
+                }
+            });
+        }
+
+        $("#food-filter").on('click', function(e) {
+            e.preventDefault();
+            loadCategoryEvents('food');
+        });
+
+        $("#no-food-filter").on('click', function(e) {
+            e.preventDefault();
+            loadCategoryEvents('no-food');
+        });
+
    });
 
 </script>

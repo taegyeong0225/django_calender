@@ -22,6 +22,8 @@ from django.conf import settings
 from bs4 import BeautifulSoup
 import requests
 
+from django.contrib import messages
+
 
 def index(request):
     # 로그인한 사용자의 이벤트만 가져옵니다. 로그인하지 않았다면 모든 이벤트를 가져옵니다.
@@ -104,6 +106,7 @@ def send_email_function(email, name, date):    # 이메일 서버 연결 정보
 def schedule_email(user_email, title, event_date):
     timezone = pytz.timezone('Asia/Seoul')
     send_date = datetime.strptime(event_date, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)
+    # send_date = datetime.now()
     send_date_with_tz = timezone.localize(send_date)
 
     scheduler = BackgroundScheduler()
@@ -137,6 +140,7 @@ def add_event(request):
     # 사용자 이메일과 이벤트 날짜 가져오기
     user_email = request.user.email
     event_date = start
+
 
     # 이메일 스케줄링
     schedule_email(user_email, title, event_date)
@@ -181,4 +185,22 @@ def remove(request):
 
     data = {"status": "success"}
     return JsonResponse(data)
+
+
+# 카테고리별 이벤트를 필터링하는 뷰
+@login_required
+def get_category_events(request, category):
+    if category not in ['food', 'no-food']:
+        return JsonResponse({'error': 'Invalid category'}, status=400)
+
+    category_events = Events.objects.filter(user=request.user, f_category=category)
+    data = [{
+        'title': event.name,
+        'id': event.id,
+        'start': event.start.strftime("%Y-%m-%d %H:%M:%S"),
+        'end': event.end.strftime("%Y-%m-%d %H:%M:%S"),
+    } for event in category_events]
+
+    return JsonResponse(data, safe=False)
+
 

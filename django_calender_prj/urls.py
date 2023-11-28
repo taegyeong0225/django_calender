@@ -32,6 +32,6 @@ urlpatterns = [
     path('accounts/signup/', accounts_views.signup, name='signup'),
     path('accounts/login/', accounts_views.login, name='login'),
     path('accounts/logout/', accounts_views.logout, name='logout'),
-    # path('signup/', signup, name='signup'),
-    # path('accounts/', include('allauth.urls')), # 로그인 사이트 주소
+
+    path('events/<str:category>/', calender_views.get_category_events, name='category-events'),
 ]
