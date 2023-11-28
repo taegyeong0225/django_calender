@@ -35,6 +35,12 @@
                         endDate = $("#event-end").val();
                         var category = $("#category").val(); // 선택한 카테고리 값 가져오기
 
+                        // foodName이 널값 또는 빈 문자열인지 검사
+                        if (!foodName.trim()) {
+                            alert('음식 이름을 입력해주세요.');
+                            return; // 함수를 빠져나가서 서버로 데이터를 전송하지 않음
+                        }
+
                         // 서버로 이벤트 데이터 전송
                         $.ajax({
                             type: "GET",
