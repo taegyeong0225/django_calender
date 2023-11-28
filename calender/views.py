@@ -75,18 +75,22 @@ def get_recipe_links(food):
 
 
 # 이메일 전송 함수
-def send_email_function(email, name, date):    # 이메일 서버 연결 정보
+def send_email_function(email, name, date, f_category):    # 이메일 서버 연결 정보
     smtp_server = 'smtp.gmail.com'  # SMTP 서버 주소 (Gmail의 경우)
     smtp_port = 587  # SMTP 서버 포트 (Gmail의 TLS 포트), 465와의 차이는?
 
     date_only = datetime.strptime(date, "%Y-%m-%d %H:%M:%S").strftime("%Y-%m-%d")
-    recipe_links = get_recipe_links(name)  # 레시피 링크 가져오기
 
-    # 이메일 메세지 설정
-    subject = f' 장고 : {name}의 소비기한이 3일 남았습니다!'  # 이메일 제목
-    body = f'{name}의 소비기한이 3일 남았습니다!<br>(소비기한: {date_only})<br><br>{recipe_links}'
+    # 카테고리에 따른 이메일 본문 설정
+    if f_category == 'food':
+        recipe_links = get_recipe_links(name)  # 레시피 링크 가져오기
+        body = f'{name}의 소비기한이 3일 남았습니다!<br>(소비기한: {date_only})<br><br>{recipe_links}'
+    else:
+        body = f'{name}의 소비기한이 3일 남았습니다!<br>(소비기한: {date_only})<br><br>'
+
+    # 나머지 이메일 설정
+    subject = f'장고 : {name}의 소비기한이 3일 남았습니다!'  # 이메일 제목
     sender = 'sw.project.django@gmail.com'  # 발신자 이메일 주소
-    # receiver = 'taegeong@naver.com'  # 수신자 이메일 주소
 
     # 이메일 메세지 생성
     msg = MIMEMultipart()
@@ -103,10 +107,9 @@ def send_email_function(email, name, date):    # 이메일 서버 연결 정보
 
 
 # 이메일 스케줄링 함수
-def schedule_email(user_email, title, event_date):
+def schedule_email(user_email, title, event_date, f_category):
     timezone = pytz.timezone('Asia/Seoul')
     send_date = datetime.strptime(event_date, "%Y-%m-%d %H:%M:%S") - timedelta(days=3)
-    # send_date = datetime.now()
     send_date_with_tz = timezone.localize(send_date)
 
     scheduler = BackgroundScheduler()
@@ -114,7 +117,7 @@ def schedule_email(user_email, title, event_date):
         send_email_function,
         'date',
         run_date=send_date_with_tz,
-        args=[user_email, title, event_date]
+        args=[user_email, title, event_date, f_category]
     )
     scheduler.start()
 
@@ -143,7 +146,7 @@ def add_event(request):
 
 
     # 이메일 스케줄링
-    schedule_email(user_email, title, event_date)
+    schedule_email(user_email, title, event_date, f_category)
 
     # JSON 응답 반환
     data = {'id': event.id}  # 생성된 이벤트의 ID를 응답 데이터에 포함
